@@ -9,3 +9,42 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  super_admin
+  admin
+  user
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String?
+  email      String   @unique
+  password   String
+  role       Role
+  contact    String?
+  gender     Gender?
+  address    String?
+  profileImg Avatar?  @relation(fields: [avatarId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  avatarId   String?  @unique
+
+  @@map("users")
+}
+
+model Avatar {
+  id   String @id @default(uuid())
+  c_id String
+  url  String
+
+  User User?
+
+  @@map("avatars")
+}
