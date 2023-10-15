@@ -1,27 +1,27 @@
 import express from "express";
 import { ENUM_USER_ROLE } from "../user/user.constants";
 import auth from "../../middlewares/auth";
-import { countryController } from "./country.controller";
+import { cityController } from "./city.controller";
 
 const router = express.Router();
 
-router.route("/").get(countryController.getAllCountry);
+router.route("/").get(cityController.getALlCity);
 router
   .route("/create")
   .post(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-    countryController.createCountry
+    cityController.createCity
   );
 router
   .route("/:id")
   .patch(
     auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-    countryController.updateCountry
+    cityController.updateCity
   )
-  .get(countryController.getById)
+  .get(cityController.getById)
   .delete(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-    countryController.deleteById
+    cityController.deleteById
   );
 
-export const countryRoutes = router;
+export const cityRoutes = router;

@@ -5,53 +5,53 @@ import httpStatus from "http-status";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 import ApiError from "../../../errors/ApiError";
-import { countryService } from "./country.service";
-import { countryFilterableFields } from "./city.constans";
+import { cityService } from "./city.service";
+import { cityFilterableFields } from "./city.constans";
 
-const createCountry = catchAsync(async (req: Request, res: Response) => {
-  const isAlreadyExist = await countryService.isAlreadyExist(req.body);
+const createCity = catchAsync(async (req: Request, res: Response) => {
+  const isAlreadyExist = await cityService.isAlreadyExist(req.body);
 
   if (isAlreadyExist) {
-    throw new ApiError(httpStatus.CONFLICT, "Country already exist!");
+    throw new ApiError(httpStatus.CONFLICT, "City already exist!");
   }
 
-  const result = await countryService.createNewCountry(req.body);
+  const result = await cityService.createNewCity(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Country created Successufully!",
+    message: "City created Successufully!",
     data: result,
   });
 });
 
-const updateCountry = catchAsync(async (req: Request, res: Response) => {
-  const isAlreadyExist = await countryService.isAlreadyExist(req.body);
+const updateCity = catchAsync(async (req: Request, res: Response) => {
+  const isAlreadyExist = await cityService.isAlreadyExist(req.body);
 
   if (isAlreadyExist) {
-    throw new ApiError(httpStatus.CONFLICT, "Country already exist!");
+    throw new ApiError(httpStatus.CONFLICT, "City already exist!");
   }
 
   const { id } = req.params;
-  const result = await countryService.updateCountry(id, req.body);
+  const result = await cityService.updateCity(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Country Update Successufully!",
+    message: "City Update Successufully!",
     data: result,
   });
 });
 
-const getAllCountry = catchAsync(async (req: Request, res: Response) => {
+const getALlCity = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFields);
-  const filters = pick(req.query, countryFilterableFields);
-  const result = await countryService.getAllCountry(paginationOptions, filters);
+  const filters = pick(req.query, cityFilterableFields);
+  const result = await cityService.getAllCity(paginationOptions, filters);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Countries received Successufully!",
+    message: "Cities received Successufully!",
     meta: result.meta,
     data: result.data,
   });
@@ -59,32 +59,32 @@ const getAllCountry = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await countryService.getById(id);
+  const result = await cityService.getById(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Country received Successufully!",
+    message: "City received Successufully!",
     data: result,
   });
 });
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await countryService.deleteById(id);
+  const result = await cityService.deleteById(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Country Delete Successufully!",
+    message: "City Delete Successufully!",
     data: result,
   });
 });
 
-export const countryController = {
-  createCountry,
-  updateCountry,
-  getAllCountry,
+export const cityController = {
+  createCity,
+  updateCity,
+  getALlCity,
   getById,
   deleteById,
 };
