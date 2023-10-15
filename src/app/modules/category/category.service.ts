@@ -133,6 +133,12 @@ const deleteById = async (id: string) => {
   return result;
 };
 
+const getAllCategoryData = async () => {
+  const result = await prisma.category.findMany();
+
+  return result;
+};
+
 export const categoryService = {
   createNewCategory,
   updateCategory,
@@ -140,4 +146,5 @@ export const categoryService = {
   getById,
   deleteById,
   isAlreadyExist,
+  getAllCategoryData,
 };

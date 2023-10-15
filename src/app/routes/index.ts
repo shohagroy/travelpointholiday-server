@@ -27,6 +27,10 @@ const moduleRoutes = [
     path: "/cities",
     route: cityRoutes,
   },
+  {
+    path: "/attractions",
+    route: cityRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

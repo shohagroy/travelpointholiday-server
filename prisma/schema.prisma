@@ -50,20 +50,22 @@ model Avatar {
 }
 
 model Category {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String        @id @default(uuid())
+  name        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  attractions Attractions[]
 
   @@map("categories")
 }
 
 model Country {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cities    City[]
+  id          String        @id @default(uuid())
+  name        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  cities      City[]
+  attractions Attractions[]
 
   @@map("countries")
 }
@@ -75,7 +77,43 @@ model City {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  country Country @relation(fields: [countryId], references: [id])
+  country     Country       @relation(fields: [countryId], references: [id])
+  attractions Attractions[]
 
   @@map("cities")
+}
+
+model Attractions {
+  id          String   @id @default(uuid())
+  tittle      String   @unique
+  banarTittle String
+  price       Float
+  tripDate    DateTime
+  tripTime    String
+  duration    String
+
+  categoryId String
+  countryId  String
+  cityId     String
+
+  category Category @relation(fields: [categoryId], references: [id])
+  country  Country  @relation(fields: [countryId], references: [id])
+  city     City     @relation(fields: [cityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  images    Images[]
+
+  @@map("attractions")
+}
+
+model Images {
+  id           String @id @default(uuid())
+  url          String
+  c_id         String
+  attractionId String @unique
+
+  attraction Attractions @relation(fields: [attractionId], references: [id])
+
+  @@map("images")
 }

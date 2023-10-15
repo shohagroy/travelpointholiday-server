@@ -84,10 +84,22 @@ const deleteById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllCategoryData = catchAsync(async (req: Request, res: Response) => {
+  const result = await categoryService.getAllCategoryData();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All Categories received Successufully!",
+    data: result,
+  });
+});
+
 export const categoryController = {
   createCategory,
   updateCategory,
   getAllCategory,
   getById,
   deleteById,
+  getAllCategoryData,
 };
