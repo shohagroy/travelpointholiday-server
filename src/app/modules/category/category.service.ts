@@ -14,7 +14,6 @@ const createNewCategory = async (payload: Category): Promise<Category> => {
 };
 
 const updateCategory = async (id: string, payload: Partial<Category>) => {
-  console.log(payload);
   const result = await prisma.category.update({
     where: {
       id,
@@ -22,7 +21,6 @@ const updateCategory = async (id: string, payload: Partial<Category>) => {
     data: payload,
   });
 
-  console.log(result);
   return result;
 };
 
