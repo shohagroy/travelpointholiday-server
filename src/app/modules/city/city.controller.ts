@@ -26,12 +26,6 @@ const createCity = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateCity = catchAsync(async (req: Request, res: Response) => {
-  const isAlreadyExist = await cityService.isAlreadyExist(req.body);
-
-  if (isAlreadyExist) {
-    throw new ApiError(httpStatus.CONFLICT, "City already exist!");
-  }
-
   const { id } = req.params;
   const result = await cityService.updateCity(id, req.body);
 

@@ -69,6 +69,17 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const result = await countryService.getAllData();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All Countries received Successufully!",
+    data: result,
+  });
+});
+
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await countryService.deleteById(id);
@@ -87,4 +98,5 @@ export const countryController = {
   getAllCountry,
   getById,
   deleteById,
+  getAllData,
 };

@@ -108,6 +108,12 @@ const deleteById = async (id: string) => {
   return result;
 };
 
+const getAllData = async () => {
+  const result = await prisma.country.findMany();
+
+  return result;
+};
+
 export const countryService = {
   createNewCountry,
   updateCountry,
@@ -115,4 +121,5 @@ export const countryService = {
   getById,
   deleteById,
   isAlreadyExist,
+  getAllData,
 };
