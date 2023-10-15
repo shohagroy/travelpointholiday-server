@@ -6,6 +6,7 @@ import { cityController } from "./city.controller";
 const router = express.Router();
 
 router.route("/").get(cityController.getALlCity);
+router.route("/get-all").get(cityController.getAllData);
 router
   .route("/create")
   .post(

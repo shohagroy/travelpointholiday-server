@@ -1,13 +1,37 @@
-import { City, Country, Prisma } from "@prisma/client";
+import { Attractions, City, Country, Images, Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { ICityFilters } from "./attraction.interface";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { citySearchableFields } from "./attraction.constans";
+import imagesUpload from "../../../helpers/imagesUpload";
 
-const createNewAttraction = async (payload: City): Promise<City> => {
-  const result = await prisma.city.create({
-    data: payload,
+const createNewAttraction = async (
+  images: string[],
+  payload: Attractions
+): Promise<Attractions> => {
+  const uploadedImages = await imagesUpload(images);
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const attractionInfo = await transactionClient.attractions.create({
+      data: payload,
+    });
+
+    console.log(attractionInfo);
+
+    const attractionimagesInfo = uploadedImages.map((image) => ({
+      secure_url: image.secure_url,
+      public_id: image.public_id,
+      attractionId: attractionInfo.id,
+    }));
+
+    console.log(attractionimagesInfo);
+
+    await transactionClient.images.createMany({
+      data: attractionimagesInfo,
+    });
+
+    return attractionInfo;
   });
 
   return result;

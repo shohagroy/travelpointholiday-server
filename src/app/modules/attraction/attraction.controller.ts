@@ -9,8 +9,9 @@ import { cityFilterableFields } from "./attraction.constans";
 import { attractionService } from "./attraction.service";
 
 const createNewAttraction = catchAsync(async (req: Request, res: Response) => {
-  const result = await attractionService.createNewAttraction(req.body);
+  const { images, ...other } = req.body;
 
+  const result = await attractionService.createNewAttraction(images, other);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

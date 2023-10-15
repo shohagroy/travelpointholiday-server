@@ -126,6 +126,11 @@ const deleteById = async (id: string) => {
 
   return result;
 };
+const getAllData = async () => {
+  const result = await prisma.city.findMany();
+
+  return result;
+};
 
 export const cityService = {
   createNewCity,
@@ -134,4 +139,5 @@ export const cityService = {
   getById,
   deleteById,
   isAlreadyExist,
+  getAllData,
 };

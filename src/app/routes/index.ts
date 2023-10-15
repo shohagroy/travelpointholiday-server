@@ -4,6 +4,7 @@ import { userRoutes } from "../modules/user/user.route";
 import { categoryRoutes } from "../modules/category/category.route";
 import { countryRoutes } from "../modules/country/country.route";
 import { cityRoutes } from "../modules/city/city.route";
+import { arrtactionRoutes } from "../modules/attraction/attraction.route";
 const router = express.Router();
 
 const moduleRoutes = [
@@ -29,7 +30,7 @@ const moduleRoutes = [
   },
   {
     path: "/attractions",
-    route: cityRoutes,
+    route: arrtactionRoutes,
   },
 ];
 

@@ -63,6 +63,17 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllData = catchAsync(async (req: Request, res: Response) => {
+  const result = await cityService.getAllData();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Cities All Data received Successufully!",
+    data: result,
+  });
+});
+
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await cityService.deleteById(id);
@@ -81,4 +92,5 @@ export const cityController = {
   getALlCity,
   getById,
   deleteById,
+  getAllData,
 };
