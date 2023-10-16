@@ -36,31 +36,33 @@ const getAllAttraction = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getById = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await cityService.getById(id);
+const getById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await attractionService.getById(id);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "City received Successufully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction received Successufully!",
+    data: result,
+  });
+});
 
-// const deleteById = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await cityService.deleteById(id);
+const deleteById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await attractionService.deleteAttraction(id);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "City Delete Successufully!",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction Delete Successufully!",
+    data: result,
+  });
+});
 
 export const attractionController = {
   createNewAttraction,
   getAllAttraction,
+  deleteById,
+  getById,
 };

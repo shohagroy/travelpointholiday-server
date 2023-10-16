@@ -15,4 +15,12 @@ router
     attractionController.createNewAttraction
   );
 
+router
+  .route("/:id")
+  .delete(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    attractionController.deleteById
+  )
+  .get(attractionController.getById);
+
 export const arrtactionRoutes = router;

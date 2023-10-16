@@ -7,7 +7,7 @@ export default async (images: Images[]) => {
 
   if (images.length) {
     images.forEach((img) => {
-      cloudinary.uploader.destroy(img.id);
+      cloudinary.uploader.destroy(img.public_id);
     });
   }
 };

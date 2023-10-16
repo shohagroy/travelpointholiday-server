@@ -5,6 +5,7 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { attractionSearchableFields } from "./attraction.constans";
 import imagesUpload from "../../../helpers/imagesUpload";
+import deletedImages from "../../../helpers/deletedImages";
 
 const createNewAttraction = async (
   images: string[],
@@ -116,7 +117,52 @@ const getALlAttraction = async (
   };
 };
 
+const deleteAttraction = async (id: string) => {
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const imagesToDelete: Images[] = await prisma.images.findMany({
+      where: {
+        attractionId: id,
+      },
+    });
+
+    const deleteInfo = await transactionClient.attractions.delete({
+      where: {
+        id,
+      },
+    });
+
+    await transactionClient.images.deleteMany({
+      where: {
+        attractionId: id,
+      },
+    });
+    await deletedImages(imagesToDelete);
+
+    return deleteInfo;
+  });
+
+  return result;
+};
+
+const getById = async (id: string) => {
+  const result = await prisma.attractions.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      images: true,
+      category: true,
+      country: true,
+      city: true,
+    },
+  });
+
+  return result;
+};
+
 export const attractionService = {
   createNewAttraction,
   getALlAttraction,
+  deleteAttraction,
+  getById,
 };
