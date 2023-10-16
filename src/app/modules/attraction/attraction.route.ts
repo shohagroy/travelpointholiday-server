@@ -21,6 +21,17 @@ router
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
     attractionController.deleteById
   )
-  .get(attractionController.getById);
+  .get(attractionController.getById)
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    attractionController.updateById
+  );
+
+router
+  .route("/edit-info/:id")
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    attractionController.updateById
+  );
 
 export const arrtactionRoutes = router;

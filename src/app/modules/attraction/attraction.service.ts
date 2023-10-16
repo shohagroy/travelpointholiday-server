@@ -125,17 +125,18 @@ const deleteAttraction = async (id: string) => {
       },
     });
 
-    const deleteInfo = await transactionClient.attractions.delete({
-      where: {
-        id,
-      },
-    });
-
     await transactionClient.images.deleteMany({
       where: {
         attractionId: id,
       },
     });
+
+    const deleteInfo = await transactionClient.attractions.delete({
+      where: {
+        id: id,
+      },
+    });
+
     await deletedImages(imagesToDelete);
 
     return deleteInfo;
@@ -160,9 +161,21 @@ const getById = async (id: string) => {
   return result;
 };
 
+const updateById = async (id: string, data: Attractions) => {
+  const result = await prisma.attractions.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return result;
+};
+
 export const attractionService = {
   createNewAttraction,
   getALlAttraction,
   deleteAttraction,
+  updateById,
   getById,
 };

@@ -60,9 +60,25 @@ const deleteById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const { images, country, city, category, ...updatedData } = req.body;
+
+  const result = await attractionService.updateById(id, updatedData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction Updates Successufully!",
+    data: result,
+  });
+});
+
 export const attractionController = {
   createNewAttraction,
   getAllAttraction,
   deleteById,
   getById,
+  updateById,
 };
