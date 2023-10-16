@@ -1,4 +1,4 @@
-import { Attractions, City, Country, Images, Prisma } from "@prisma/client";
+import { Attractions, Images, Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { ICityFilters } from "./attraction.interface";
 import { IPaginationOptions } from "../../../interfaces/pagination";
@@ -172,10 +172,42 @@ const updateById = async (id: string, data: Attractions) => {
   return result;
 };
 
+const removeImage = async (data: Images) => {
+  const result = await prisma.images.delete({
+    where: {
+      id: data?.id,
+    },
+  });
+  await deletedImages([data]);
+
+  return result;
+};
+
+const uploadNewImage = async (id: string, data: string[]) => {
+  const uploadedImages = await imagesUpload(data);
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const attractionimagesInfo = uploadedImages.map((image) => ({
+      secure_url: image.secure_url,
+      public_id: image.public_id,
+      attractionId: id,
+    }));
+
+    const imagesInfo = await transactionClient.images.createMany({
+      data: attractionimagesInfo,
+    });
+
+    return imagesInfo;
+  });
+
+  return result;
+};
+
 export const attractionService = {
   createNewAttraction,
   getALlAttraction,
   deleteAttraction,
   updateById,
   getById,
+  removeImage,
+  uploadNewImage,
 };

@@ -34,4 +34,15 @@ router
     attractionController.updateById
   );
 
+router
+  .route("/images/:id")
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    attractionController.removeImage
+  )
+  .post(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    attractionController.uploadNewImage
+  );
+
 export const arrtactionRoutes = router;

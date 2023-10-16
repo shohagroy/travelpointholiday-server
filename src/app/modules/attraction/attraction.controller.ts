@@ -75,10 +75,35 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const removeImage = catchAsync(async (req: Request, res: Response) => {
+  const result = await attractionService.removeImage(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction Image Removed Successufully!",
+    data: result,
+  });
+});
+
+const uploadNewImage = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await attractionService.uploadNewImage(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction Image Added Successufully!",
+    data: result,
+  });
+});
+
 export const attractionController = {
   createNewAttraction,
   getAllAttraction,
   deleteById,
   getById,
   updateById,
+  removeImage,
+  uploadNewImage,
 };
