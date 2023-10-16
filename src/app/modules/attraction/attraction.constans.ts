@@ -1,3 +1,8 @@
-export const cityFilterableFields: string[] = ["search", "countryId"];
+export const attractionFilterableFields: string[] = [
+  "search",
+  "countryId",
+  "cityId",
+  "categoryId",
+];
 
-export const citySearchableFields: string[] = ["name"];
+export const attractionSearchableFields: string[] = ["tittle"];

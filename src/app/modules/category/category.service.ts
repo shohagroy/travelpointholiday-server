@@ -46,34 +46,6 @@ const getALlCategory = async (
     });
   }
 
-  // if (Object.keys(filterData).length > 0) {
-  //   andConditions.push({
-  //     AND: Object.keys(filterData).map((key) => {
-  //       if (key === "category") {
-  //         return {
-  //           category: {
-  //             id: {
-  //               in: [filterData[key]],
-  //             },
-  //           },
-  //         };
-  //       } else if (key === "minPrice") {
-  //         return {
-  //           price: {
-  //             gte: parseFloat(filterData[key]!),
-  //           },
-  //         };
-  //       } else if (key === "maxPrice") {
-  //         return {
-  //           price: {
-  //             lte: parseFloat(filterData[key]!),
-  //           },
-  //         };
-  //       }
-  //     }),
-  //   });
-  // }
-
   const whereConditions: Prisma.CategoryWhereInput | {} =
     andConditions.length > 0 ? { AND: andConditions } : {};
 

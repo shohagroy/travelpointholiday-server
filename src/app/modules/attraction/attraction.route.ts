@@ -6,6 +6,8 @@ import { attractionController } from "./attraction.controller";
 
 const router = express.Router();
 
+router.route("/").get(attractionController.getAllAttraction);
+
 router
   .route("/create")
   .post(

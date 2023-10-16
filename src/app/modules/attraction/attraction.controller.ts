@@ -4,9 +4,8 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
-import ApiError from "../../../errors/ApiError";
-import { cityFilterableFields } from "./attraction.constans";
 import { attractionService } from "./attraction.service";
+import { attractionFilterableFields } from "./attraction.constans";
 
 const createNewAttraction = catchAsync(async (req: Request, res: Response) => {
   const { images, ...other } = req.body;
@@ -20,31 +19,22 @@ const createNewAttraction = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const updateCity = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await cityService.updateCity(id, req.body);
+const getAllAttraction = catchAsync(async (req: Request, res: Response) => {
+  const paginationOptions = pick(req.query, paginationFields);
+  const filters = pick(req.query, attractionFilterableFields);
+  const result = await attractionService.getALlAttraction(
+    paginationOptions,
+    filters
+  );
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "City Update Successufully!",
-//     data: result,
-//   });
-// });
-
-// const getALlCity = catchAsync(async (req: Request, res: Response) => {
-//   const paginationOptions = pick(req.query, paginationFields);
-//   const filters = pick(req.query, cityFilterableFields);
-//   const result = await cityService.getAllCity(paginationOptions, filters);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Cities received Successufully!",
-//     meta: result.meta,
-//     data: result.data,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Attraction received Successufully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 // const getById = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -72,4 +62,5 @@ const createNewAttraction = catchAsync(async (req: Request, res: Response) => {
 
 export const attractionController = {
   createNewAttraction,
+  getAllAttraction,
 };
