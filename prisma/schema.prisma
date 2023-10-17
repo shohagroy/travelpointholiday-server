@@ -23,19 +23,20 @@ enum Gender {
 }
 
 model User {
-  id           String              @id @default(uuid())
-  name         String?
-  email        String              @unique
-  password     String
-  role         Role
-  contact      String?
-  gender       Gender?
-  address      String?
-  profileImg   Avatar?             @relation(fields: [avatarId], references: [id])
+  id       String  @id @default(uuid())
+  name     String?
+  email    String  @unique
+  password String
+  role     Role
+  contact  String?
+  gender   Gender?
+  address  String?
+
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
   avatarId     String?             @unique
   bookingLists AttractionBooking[]
+  profileImg   Avatar?
 
   @@map("users")
 }
@@ -44,8 +45,9 @@ model Avatar {
   id         String @id @default(uuid())
   public_id  String
   secure_url String
+  userId     String @unique
 
-  User User?
+  user User @relation(fields: [userId], references: [id])
 
   @@map("avatars")
 }

@@ -1,5 +1,7 @@
-import { User } from "@prisma/client";
+import { Avatar, User } from "@prisma/client";
 import prisma from "../../../shared/prisma";
+import imagesUpload from "../../../helpers/imagesUpload";
+import deletedImages from "../../../helpers/deletedImages";
 
 const getAllUserToDb = async (): Promise<Partial<User>[]> => {
   const result = await prisma.user.findMany({});
@@ -52,6 +54,44 @@ const updateUserDataToDb = async (
   return result;
 };
 
+const updateUserAvatar = async (
+  id: string,
+  payload: string[]
+): Promise<Avatar> => {
+  const avatarImage = await imagesUpload(payload);
+
+  const isAlreadyExist = await prisma.avatar.findUnique({
+    where: {
+      userId: id,
+    },
+  });
+
+  if (isAlreadyExist) {
+    await deletedImages([isAlreadyExist]);
+    const result = await prisma.avatar.update({
+      where: {
+        userId: id,
+      },
+      data: {
+        secure_url: avatarImage[0].secure_url,
+        public_id: avatarImage[0].public_id,
+      },
+    });
+
+    return result;
+  }
+
+  const result = await prisma.avatar.create({
+    data: {
+      secure_url: avatarImage[0].secure_url,
+      public_id: avatarImage[0].public_id,
+      userId: id,
+    },
+  });
+
+  return result;
+};
+
 const deleteUserToDb = async (id: string): Promise<Partial<User | null>> => {
   const result = await prisma.user.delete({
     where: {
@@ -90,4 +130,5 @@ export const userService = {
   getSingleUserToDb,
   updateUserDataToDb,
   deleteUserToDb,
+  updateUserAvatar,
 };

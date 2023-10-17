@@ -39,6 +39,19 @@ const updateUserInfo = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateUserAvatar = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.user!;
+  const { blob } = req.body;
+
+  const result = await userService.updateUserAvatar(id, [blob]);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Avatar Updated Successfully!",
+    data: result,
+  });
+});
+
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await userService.deleteUserToDb(id);
@@ -55,4 +68,5 @@ export const userController = {
   getSingle,
   updateUserInfo,
   deleteUser,
+  updateUserAvatar,
 };

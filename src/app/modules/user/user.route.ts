@@ -15,6 +15,13 @@ router
   );
 
 router
+  .route("/update-avatar")
+  .patch(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+    userController.updateUserAvatar
+  );
+
+router
   .route("/get-profile")
   .get(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER, ENUM_USER_ROLE.SUPER_ADMIN),
