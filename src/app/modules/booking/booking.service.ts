@@ -38,11 +38,11 @@ const getAllBooking = async (
 ) => {
   const { size, page, skip } =
     paginationHelpers.calculatePagination(paginationOptions);
-  const { cancel, refund } = filters;
+  const { cancel, refund, booked } = filters;
 
   const andConditions = [];
 
-  if (cancel && !refund) {
+  if (cancel && !refund && !booked) {
     andConditions.push({
       OR: [
         {
@@ -57,7 +57,7 @@ const getAllBooking = async (
     });
   }
 
-  if (refund) {
+  if (refund && !cancel && !booked) {
     andConditions.push({
       OR: [
         {
@@ -66,6 +66,21 @@ const getAllBooking = async (
           },
           refundStatus: {
             equals: true,
+          },
+        },
+      ],
+    });
+  }
+
+  if (!refund && !cancel && booked) {
+    andConditions.push({
+      OR: [
+        {
+          status: {
+            equals: "booked",
+          },
+          refundStatus: {
+            equals: false,
           },
         },
       ],
@@ -228,6 +243,38 @@ const refundConfirm = async (id: string) => {
   return result;
 };
 
+const cancelBookingAndRefund = async (id: string, totalTicket: number) => {
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const bookingInfo = await transactionClient.attractionBooking.update({
+      where: {
+        id,
+      },
+      data: {
+        status: "cancel",
+        refundStatus: true,
+      },
+    });
+
+    await transactionClient.attractions.update({
+      where: {
+        id: bookingInfo.attractionId,
+      },
+      data: {
+        totalSeat: {
+          increment: totalTicket,
+        },
+        bookingSeat: {
+          decrement: totalTicket,
+        },
+      },
+    });
+
+    return bookingInfo;
+  });
+
+  return result;
+};
+
 export const bookingService = {
   createBooking,
   getUserBookingList,
@@ -235,4 +282,5 @@ export const bookingService = {
   bookingCancel,
   refundCancel,
   refundConfirm,
+  cancelBookingAndRefund,
 };

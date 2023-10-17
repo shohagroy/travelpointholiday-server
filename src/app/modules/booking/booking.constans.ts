@@ -1,1 +1,1 @@
-export const bookingFilterableFields: string[] = ["cancel", "refund"];
+export const bookingFilterableFields: string[] = ["cancel", "refund", "booked"];

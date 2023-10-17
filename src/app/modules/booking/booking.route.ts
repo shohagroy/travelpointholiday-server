@@ -48,4 +48,11 @@ router
     bookingController.refundConfirm
   );
 
+router
+  .route("/cancel-and-refund")
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    bookingController.cancelBookingAndRefund
+  );
+
 export const bookingRoutes = router;
