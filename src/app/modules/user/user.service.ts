@@ -22,7 +22,9 @@ const getSingleUserToDb = async (id: string): Promise<Partial<User | null>> => {
       gender: true,
       profileImg: {
         select: {
-          url: true,
+          id: true,
+          public_id: true,
+          secure_url: true,
         },
       },
       createdAt: true,

@@ -23,18 +23,19 @@ enum Gender {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String?
-  email      String   @unique
-  password   String
-  role       Role
-  contact    String?
-  gender     Gender?
-  address    String?
-  profileImg Avatar?  @relation(fields: [avatarId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  avatarId   String?  @unique
+  id           String              @id @default(uuid())
+  name         String?
+  email        String              @unique
+  password     String
+  role         Role
+  contact      String?
+  gender       Gender?
+  address      String?
+  profileImg   Avatar?             @relation(fields: [avatarId], references: [id])
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  avatarId     String?             @unique
+  bookingLists AttractionBooking[]
 
   @@map("users")
 }
@@ -87,11 +88,14 @@ model Attractions {
   id          String   @id @default(uuid())
   tittle      String   @unique
   banarTittle String
-  price       String
+  price       Float    @default(1200)
   tripDate    DateTime
   tripTime    String
   duration    String
   description String?
+
+  totalSeat   Int @default(72)
+  bookingSeat Int @default(0)
 
   categoryId String
   countryId  String
@@ -101,9 +105,10 @@ model Attractions {
   country  Country  @relation(fields: [countryId], references: [id])
   city     City     @relation(fields: [cityId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  images    Images[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  images      Images[]
+  bookinginfo AttractionBooking[]
 
   @@map("attractions")
 }
@@ -117,4 +122,22 @@ model Images {
   attraction Attractions @relation(fields: [attractionId], references: [id])
 
   @@map("images")
+}
+
+model AttractionBooking {
+  id           String @id @default(uuid())
+  userId       String
+  attractionId String
+  totalTicket  Int
+  discount     Int    @default(0)
+  status       String @default("booked")
+  payment      Float
+
+  userInfo   User        @relation(fields: [userId], references: [id])
+  attraction Attractions @relation(fields: [attractionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("attraction_booking")
 }
