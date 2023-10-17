@@ -34,4 +34,18 @@ router
     bookingController.getALlBooking
   );
 
+router
+  .route("/refund-cancel")
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    bookingController.refundCancel
+  );
+
+router
+  .route("/refund-confirm")
+  .patch(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    bookingController.refundConfirm
+  );
+
 export const bookingRoutes = router;

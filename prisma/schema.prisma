@@ -125,6 +125,25 @@ model Images {
 }
 
 model AttractionBooking {
+  id           String  @id @default(uuid())
+  userId       String
+  attractionId String
+  totalTicket  Int
+  discount     Int     @default(0)
+  status       String  @default("booked")
+  payment      Float
+  refundStatus Boolean @default(false)
+
+  userInfo   User        @relation(fields: [userId], references: [id])
+  attraction Attractions @relation(fields: [attractionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("attraction_booking")
+}
+
+model UserCart {
   id           String @id @default(uuid())
   userId       String
   attractionId String
@@ -133,11 +152,8 @@ model AttractionBooking {
   status       String @default("booked")
   payment      Float
 
-  userInfo   User        @relation(fields: [userId], references: [id])
-  attraction Attractions @relation(fields: [attractionId], references: [id])
-
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
-  @@map("attraction_booking")
+  @@map("user_carts")
 }

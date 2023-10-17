@@ -1,8 +1,1 @@
-export const attractionFilterableFields: string[] = [
-  "search",
-  "countryId",
-  "cityId",
-  "categoryId",
-];
-
-export const attractionSearchableFields: string[] = ["tittle"];
+export const bookingFilterableFields: string[] = ["cancel", "refund"];

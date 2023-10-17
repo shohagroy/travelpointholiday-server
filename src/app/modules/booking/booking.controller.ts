@@ -5,6 +5,9 @@ import httpStatus from "http-status";
 import { bookingService } from "./booking.service";
 import { attractionService } from "../attraction/attraction.service";
 import { AttractionBooking } from "@prisma/client";
+import pick from "../../../shared/pick";
+import { paginationFields } from "../../../constants/pagination";
+import { bookingFilterableFields } from "./booking.constans";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const { attractionId, totalTicket, userId } = req.body;
@@ -30,7 +33,11 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserBookingList = catchAsync(async (req: Request, res: Response) => {
-  const result = await bookingService.getUserBookingList(req.user!.userId);
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await bookingService.getUserBookingList(
+    paginationOptions,
+    req.user!.userId
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -40,7 +47,9 @@ const getUserBookingList = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getALlBooking = catchAsync(async (req: Request, res: Response) => {
-  const result = await bookingService.getAllBooking();
+  const paginationOptions = pick(req.query, paginationFields);
+  const filters = pick(req.query, bookingFilterableFields);
+  const result = await bookingService.getAllBooking(paginationOptions, filters);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -60,9 +69,35 @@ const bookingCancel = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refundConfirm = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.body;
+
+  const result = await bookingService.refundConfirm(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Refund Request Confirm Successufully!",
+    data: result,
+  });
+});
+
+const refundCancel = catchAsync(async (req: Request, res: Response) => {
+  const { id, totalTicket } = req.body;
+
+  const result = await bookingService.bookingCancel(id, totalTicket);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Booking Cancel Successufully!",
+    data: result,
+  });
+});
+
 export const bookingController = {
   createBooking,
   getUserBookingList,
   getALlBooking,
   bookingCancel,
+  refundCancel,
+  refundConfirm,
 };
