@@ -4,10 +4,16 @@ import { userService } from "./user.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { User } from "@prisma/client";
+import pick from "../../../shared/pick";
+import { paginationFields } from "../../../constants/pagination";
+import { userFilterableFields } from "./user.constants";
 
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.getAllUserToDb();
-  sendResponse<Partial<User>[]>(res, {
+  const paginationOptions = pick(req.query, paginationFields);
+  const filters = pick(req.query, userFilterableFields);
+
+  const result = await userService.getAllUserToDb(paginationOptions, filters);
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "users retrieved successfully",
@@ -52,21 +58,21 @@ const updateUserAvatar = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await userService.deleteUserToDb(id);
-  sendResponse<Partial<User>>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "user deleted successfully",
-    data: result,
-  });
-});
+// const deleteUser = catchAsync(async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   const result = await userService.deleteUserToDb(id);
+//   sendResponse<Partial<User>>(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: "user deleted successfully",
+//     data: result,
+//   });
+// });
 
 export const userController = {
   getAllUser,
   getSingle,
   updateUserInfo,
-  deleteUser,
+  // deleteUser,
   updateUserAvatar,
 };

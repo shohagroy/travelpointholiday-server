@@ -1,16 +1,68 @@
-import { Avatar, User } from "@prisma/client";
+import { Avatar, Prisma, User } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import imagesUpload from "../../../helpers/imagesUpload";
 import deletedImages from "../../../helpers/deletedImages";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { IUserFilters } from "./user.interface";
+import { paginationHelpers } from "../../../helpers/paginationHelper";
+import { userSearchableFields } from "./user.constants";
 
-const getAllUserToDb = async (): Promise<Partial<User>[]> => {
+const getAllUserToDb = async (
+  paginationOptions: IPaginationOptions,
+  filters: IUserFilters
+) => {
+  const { size, page, skip } =
+    paginationHelpers.calculatePagination(paginationOptions);
+  const { search, ...filterData } = filters;
+
+  const andConditions = [];
+
+  if (search) {
+    andConditions.push({
+      OR: userSearchableFields.map((field) => ({
+        [field]: {
+          contains: search,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+  if (filterData) {
+    andConditions.push({
+      AND: Object.keys(filterData).map((key) => {
+        if (key === "role") {
+          return {
+            role: {
+              equals: filterData[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  const whereConditions: Prisma.UserWhereInput | {} =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
   const result = await prisma.user.findMany({
+    where: whereConditions,
     include: {
       profileImg: true,
     },
   });
 
-  return result;
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      size,
+    },
+    data: result,
+  };
 };
 
 const getSingleUserToDb = async (id: string): Promise<Partial<User | null>> => {
