@@ -38,6 +38,7 @@ model User {
   bookingLists AttractionBooking[]
   profileImg   Avatar?
   reviews      Review[]
+  cartList     UserCart[]
 
   @@map("users")
 }
@@ -113,6 +114,7 @@ model Attractions {
   images      Images[]
   bookinginfo AttractionBooking[]
   reviews     Review[]
+  cartList    UserCart[]
 
   @@map("attractions")
 }
@@ -151,10 +153,13 @@ model UserCart {
   id           String @id @default(uuid())
   userId       String
   attractionId String
-  totalTicket  Int
-  discount     Int    @default(0)
-  status       String @default("booked")
-  payment      Float
+  tittle       String
+  image        String
+  price        Float
+  totalTicket  Int    @default(1)
+
+  user       User        @relation(fields: [userId], references: [id])
+  attraction Attractions @relation(fields: [attractionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
