@@ -2,6 +2,8 @@ import { Images } from "@prisma/client";
 import { config } from "../config/cloudinary";
 
 import { v2 as cloudinary } from "cloudinary";
+import ApiError from "../errors/ApiError";
+import httpStatus from "http-status";
 
 export default async (blobImages: string[]) => {
   cloudinary.config(config);
@@ -27,7 +29,7 @@ export default async (blobImages: string[]) => {
 
     return uploadedFiles;
   } catch (error) {
-    console.error(error);
+    new ApiError(httpStatus.BAD_REQUEST, "Error uploading images");
     return [];
   }
 };

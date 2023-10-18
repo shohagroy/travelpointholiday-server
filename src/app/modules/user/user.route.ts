@@ -5,7 +5,12 @@ import { ENUM_USER_ROLE } from "./user.constants";
 
 const router = express.Router();
 
-router.route("/").get(auth(ENUM_USER_ROLE.ADMIN), userController.getAllUser);
+router
+  .route("/")
+  .get(
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    userController.getAllUser
+  );
 
 router
   .route("/update-info")

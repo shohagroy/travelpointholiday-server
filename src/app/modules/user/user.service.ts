@@ -4,7 +4,11 @@ import imagesUpload from "../../../helpers/imagesUpload";
 import deletedImages from "../../../helpers/deletedImages";
 
 const getAllUserToDb = async (): Promise<Partial<User>[]> => {
-  const result = await prisma.user.findMany({});
+  const result = await prisma.user.findMany({
+    include: {
+      profileImg: true,
+    },
+  });
 
   return result;
 };
@@ -102,13 +106,19 @@ const deleteUserToDb = async (id: string): Promise<Partial<User | null>> => {
   return result;
 };
 
-const findByEmail = async (email: string): Promise<User | null> => {
+const findByEmail = async (email: string) => {
   const user = await prisma.user.findUnique({
     where: {
       email,
     },
     include: {
-      profileImg: true,
+      profileImg: {
+        select: {
+          id: true,
+          public_id: true,
+          secure_url: true,
+        },
+      },
     },
   });
 

@@ -18,7 +18,7 @@ const createNewUser = async (payload: User) => {
   }
 
   payload.password = await hashedPassword.createhas(payload.password!);
-  payload.role = ENUM_USER_ROLE.SUPER_ADMIN;
+  payload.role = ENUM_USER_ROLE.USER;
   const newUser = await userService.insertUserToDB(payload);
 
   const refreshToken = await jwtHelpers.createToken(
