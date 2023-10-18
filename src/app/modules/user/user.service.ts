@@ -96,11 +96,24 @@ const updateUserAvatar = async (
   return result;
 };
 
-const deleteUserToDb = async (id: string): Promise<Partial<User | null>> => {
-  const result = await prisma.user.delete({
-    where: {
-      id,
-    },
+const deleteUserToDb = async (data: {
+  id: string;
+  avatarId: string;
+}): Promise<Partial<User | null>> => {
+  const result = prisma.$transaction(async (transactionClient) => {
+    await transactionClient.avatar.delete({
+      where: {
+        id: data.avatarId,
+      },
+    });
+
+    const userInfo = await transactionClient.user.delete({
+      where: {
+        id: data.id,
+      },
+    });
+
+    return userInfo;
   });
 
   return result;

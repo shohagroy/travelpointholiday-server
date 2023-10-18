@@ -84,10 +84,36 @@ const getAccessToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changeUserRole = catchAsync(async (req: Request, res: Response) => {
+  const { id, ...other } = req.body;
+
+  const result = await authService.changeUserRole(id, other);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Role Update successufully",
+    data: result,
+  });
+});
+
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  const result = await authService.deleteUser(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "user Delete Successfully successufully",
+    data: result,
+  });
+});
+
 export const authController = {
   userSignup,
   userSignin,
   getProfile,
   getAccessToken,
   changePassword,
+  changeUserRole,
+  deleteUser,
 };

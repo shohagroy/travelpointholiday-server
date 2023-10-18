@@ -14,4 +14,18 @@ router
     authController.changePassword
   );
 
+router
+  .route("/change-user-role")
+  .patch(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+    authController.changeUserRole
+  );
+
+router
+  .route("/delete-user")
+  .patch(
+    auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+    authController.deleteUser
+  );
+
 export const authRoutes = router;

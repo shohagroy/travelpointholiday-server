@@ -99,10 +99,29 @@ const createAccessToken = async (id: string) => {
   return result;
 };
 
+const changeUserRole = async (id: string, role: Partial<User>) => {
+  const result = await userService.updateUserDataToDb(id, role);
+  return result;
+};
+
+const deleteUser = async (email: string) => {
+  const isUserDelete = await userService.findByEmail(email);
+
+  const data: { id: string; avatarId: string } = {
+    id: isUserDelete!.id,
+    avatarId: isUserDelete!.profileImg!.id,
+  };
+
+  const result = await userService.deleteUserToDb(data);
+  return result;
+};
+
 export const authService = {
   createNewUser,
   userSignin,
   getProfile,
   createAccessToken,
   changePassword,
+  changeUserRole,
+  deleteUser,
 };
