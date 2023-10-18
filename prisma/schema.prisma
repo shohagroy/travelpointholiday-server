@@ -37,6 +37,7 @@ model User {
   avatarId     String?             @unique
   bookingLists AttractionBooking[]
   profileImg   Avatar?
+  reviews      Review[]
 
   @@map("users")
 }
@@ -111,6 +112,7 @@ model Attractions {
   updatedAt   DateTime            @updatedAt
   images      Images[]
   bookinginfo AttractionBooking[]
+  reviews     Review[]
 
   @@map("attractions")
 }
@@ -158,4 +160,20 @@ model UserCart {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("user_carts")
+}
+
+model Review {
+  id           String @id @default(uuid())
+  userId       String
+  attractionId String
+  review       String
+  star         Int    @default(0)
+
+  user       User        @relation(fields: [userId], references: [id])
+  attraction Attractions @relation(fields: [attractionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("reviews")
 }

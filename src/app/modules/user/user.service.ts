@@ -49,6 +49,8 @@ const getAllUserToDb = async (
     include: {
       profileImg: true,
     },
+    take: size,
+    skip,
   });
 
   const total = await prisma.user.count({
@@ -153,11 +155,13 @@ const deleteUserToDb = async (data: {
   avatarId: string;
 }): Promise<Partial<User | null>> => {
   const result = prisma.$transaction(async (transactionClient) => {
-    await transactionClient.avatar.delete({
-      where: {
-        id: data.avatarId,
-      },
-    });
+    if (data?.avatarId !== "undifine") {
+      await transactionClient.avatar.delete({
+        where: {
+          id: data.avatarId,
+        },
+      });
+    }
 
     const userInfo = await transactionClient.user.delete({
       where: {

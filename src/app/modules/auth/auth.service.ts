@@ -109,7 +109,7 @@ const deleteUser = async (email: string) => {
 
   const data: { id: string; avatarId: string } = {
     id: isUserDelete!.id,
-    avatarId: isUserDelete!.profileImg!.id,
+    avatarId: isUserDelete?.profileImg?.id || "undifine",
   };
 
   const result = await userService.deleteUserToDb(data);

@@ -15,7 +15,7 @@ router
 router
   .route("/get-all")
   .get(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER),
     countryController.getAllData
   );
 router
