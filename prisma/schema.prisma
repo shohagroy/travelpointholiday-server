@@ -182,3 +182,12 @@ model Review {
 
   @@map("reviews")
 }
+
+model Banar {
+  id         String  @id @default(uuid())
+  public_id  String
+  secure_url String
+  status     Boolean @default(true)
+
+  @@map("banar")
+}
