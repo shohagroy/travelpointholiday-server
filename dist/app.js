@@ -14,11 +14,7 @@ const passport_config_1 = __importDefault(require("./config/passport.config"));
 const express_session_1 = __importDefault(require("express-session"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: [
-        "http://localhost:3000",
-        "https://accounts.google.com/",
-        `${envconfig_1.default.client_url}`,
-    ],
+    origin: ["http://localhost:3000", `${envconfig_1.default.client_url}`],
     // envconfig.node_env !== "development"
     //   ? "http://localhost:3000"
     //   : envconfig.client_url,

@@ -33,6 +33,7 @@ const attraction_service_1 = require("./attraction.service");
 const attraction_constans_1 = require("./attraction.constans");
 const createNewAttraction = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { images } = _a, other = __rest(_a, ["images"]);
+    other["price"] = Number(other.price);
     const result = yield attraction_service_1.attractionService.createNewAttraction(images, other);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

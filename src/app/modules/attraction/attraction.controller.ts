@@ -9,6 +9,7 @@ import { attractionFilterableFields } from "./attraction.constans";
 
 const createNewAttraction = catchAsync(async (req: Request, res: Response) => {
   const { images, ...other } = req.body;
+  other["price"] = Number(other.price);
 
   const result = await attractionService.createNewAttraction(images, other);
   sendResponse(res, {
@@ -93,7 +94,7 @@ const uploadNewImage = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Attraction Image Added Successufully!",
+    message: "Attraction Image Update Successufully!",
     data: result,
   });
 });

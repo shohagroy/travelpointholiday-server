@@ -12,11 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://accounts.google.com/",
-      `${envconfig.client_url}`,
-    ],
+    origin: ["http://localhost:3000", `${envconfig.client_url}`],
     // envconfig.node_env !== "development"
     //   ? "http://localhost:3000"
     //   : envconfig.client_url,
