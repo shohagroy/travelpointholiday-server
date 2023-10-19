@@ -31,21 +31,20 @@ const updateBanar = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllBanar = catchAsync(async (req: Request, res: Response) => {
-  const paginationOptions = pick(req.query, paginationFields);
-  const result = await banarService.getAllBanar(paginationOptions);
+  const result = await banarService.getAllBanar();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Banar received Successufully!",
-    meta: result.meta,
-    data: result.data,
+    data: result,
   });
 });
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await banarService.deleteById(id);
+  const deletedData = req.body;
+  const result = await banarService.deleteById(id, deletedData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

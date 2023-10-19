@@ -1,11 +1,13 @@
-import { Banar, Country } from "@prisma/client";
+import { Banar } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { IPaginationOptions } from "../../../interfaces/pagination";
-import { paginationHelpers } from "../../../helpers/paginationHelper";
+import imagesUpload from "../../../helpers/imagesUpload";
+import deletedImages from "../../../helpers/deletedImages";
 
-const createNewBanar = async (payload: Banar): Promise<Banar> => {
-  const result = await prisma.banar.create({
-    data: payload,
+const createNewBanar = async (payload: string[]) => {
+  const uploadedImages = await imagesUpload(payload);
+
+  const result = await prisma.banar.createMany({
+    data: uploadedImages,
   });
 
   return result;
@@ -13,7 +15,7 @@ const createNewBanar = async (payload: Banar): Promise<Banar> => {
 
 const updateBanar = async (
   id: string,
-  payload: Partial<Country>
+  payload: Partial<Banar>
 ): Promise<Banar> => {
   const result = await prisma.banar.update({
     where: {
@@ -25,33 +27,19 @@ const updateBanar = async (
   return result;
 };
 
-const getAllBanar = async (paginationOptions: IPaginationOptions) => {
-  const { size, page, skip } =
-    paginationHelpers.calculatePagination(paginationOptions);
+const getAllBanar = async () => {
+  const result = await prisma.banar.findMany({});
 
-  const result = await prisma.banar.findMany({
-    skip,
-    take: size,
-  });
-
-  const total = await prisma.banar.count({});
-
-  return {
-    meta: {
-      total,
-      page,
-      size,
-    },
-    data: result,
-  };
+  return result;
 };
 
-const deleteById = async (id: string) => {
+const deleteById = async (id: string, data: Banar) => {
   const result = await prisma.banar.delete({
     where: {
       id,
     },
   });
+  await deletedImages([data]);
 
   return result;
 };

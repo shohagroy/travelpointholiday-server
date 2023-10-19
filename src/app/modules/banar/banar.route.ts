@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.route("/").get(banarController.getAllBanar);
 router
-  .route("/create")
+  .route("/upload")
   .post(
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
     banarController.createbanar

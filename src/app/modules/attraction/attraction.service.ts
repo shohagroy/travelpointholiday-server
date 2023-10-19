@@ -119,9 +119,13 @@ const getALlAttraction = async (
 
 const deleteAttraction = async (id: string) => {
   const result = await prisma.$transaction(async (transactionClient) => {
-    const imagesToDelete: Images[] = await prisma.images.findMany({
+    const imagesToDelete = await prisma.images.findMany({
       where: {
         attractionId: id,
+      },
+      select: {
+        public_id: true,
+        secure_url: true,
       },
     });
 
@@ -137,7 +141,9 @@ const deleteAttraction = async (id: string) => {
       },
     });
 
-    await deletedImages(imagesToDelete);
+    await deletedImages(
+      imagesToDelete as [{ secure_url: string; public_id: string }]
+    );
 
     return deleteInfo;
   });
