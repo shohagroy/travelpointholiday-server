@@ -180,9 +180,26 @@ const findByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return user;
 });
 const insertUserToDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.user.create({
-        data,
-    });
+    const result = yield prisma_1.default.$transaction((transactionClient) => __awaiter(void 0, void 0, void 0, function* () {
+        const userInfo = yield transactionClient.user.create({
+            data: {
+                email: data.email,
+                name: data.name,
+                password: data.password,
+                role: data.role,
+            },
+        });
+        if (data === null || data === void 0 ? void 0 : data.avatarId) {
+            yield transactionClient.avatar.create({
+                data: {
+                    secure_url: data.avatarId,
+                    public_id: "google_img",
+                    userId: userInfo.id,
+                },
+            });
+        }
+        return userInfo;
+    }));
     return result;
 });
 exports.userService = {

@@ -8,6 +8,7 @@ import { AttractionBooking } from "@prisma/client";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 import { bookingFilterableFields } from "./booking.constans";
+import { JwtPayload } from "jsonwebtoken";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
   const { attractionId, totalTicket, userId } = req.body;
@@ -33,11 +34,10 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserBookingList = catchAsync(async (req: Request, res: Response) => {
+  const { id }: JwtPayload = req.user!;
+
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await bookingService.getUserBookingList(
-    paginationOptions,
-    req.user!.userId
-  );
+  const result = await bookingService.getUserBookingList(paginationOptions, id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

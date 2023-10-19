@@ -13,9 +13,9 @@ router.route("/").get(country_controller_1.countryController.getAllCountry);
 router
     .route("/create")
     .post((0, auth_1.default)(user_constants_1.ENUM_USER_ROLE.ADMIN, user_constants_1.ENUM_USER_ROLE.SUPER_ADMIN), country_controller_1.countryController.createCountry);
-router
-    .route("/get-all")
-    .get((0, auth_1.default)(user_constants_1.ENUM_USER_ROLE.ADMIN, user_constants_1.ENUM_USER_ROLE.SUPER_ADMIN, user_constants_1.ENUM_USER_ROLE.USER), country_controller_1.countryController.getAllData);
+router.route("/get-all").get(
+// auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER),
+country_controller_1.countryController.getAllData);
 router
     .route("/:id")
     .patch((0, auth_1.default)(user_constants_1.ENUM_USER_ROLE.SUPER_ADMIN, user_constants_1.ENUM_USER_ROLE.ADMIN), country_controller_1.countryController.updateCountry)

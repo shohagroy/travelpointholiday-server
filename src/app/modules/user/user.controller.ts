@@ -7,6 +7,7 @@ import { User } from "@prisma/client";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 import { userFilterableFields } from "./user.constants";
+import { JwtPayload } from "jsonwebtoken";
 
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFields);
@@ -22,7 +23,7 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingle = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.user!;
+  const { id }: JwtPayload = req.user!;
   const result = await userService.getSingleUserToDb(id);
   sendResponse<Partial<User>>(res, {
     statusCode: httpStatus.OK,
@@ -33,7 +34,7 @@ const getSingle = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserInfo = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.user!;
+  const { id }: JwtPayload = req.user!;
   const updatedData = req.body;
 
   const result = await userService.updateUserDataToDb(id, updatedData);
@@ -46,7 +47,7 @@ const updateUserInfo = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserAvatar = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.user!;
+  const { id }: JwtPayload = req.user!;
   const { blob } = req.body;
 
   const result = await userService.updateUserAvatar(id, [blob]);

@@ -18,7 +18,8 @@ const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 const cart_service_1 = require("./cart.service");
 const addToCart = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    req.body["userId"] = req === null || req === void 0 ? void 0 : req.user.id;
+    const { id } = req === null || req === void 0 ? void 0 : req.user;
+    req.body["userId"] = id;
     let result;
     const isAlreadyExits = yield cart_service_1.cartService.findUnique(req.body);
     if (!isAlreadyExits) {
@@ -35,7 +36,8 @@ const addToCart = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     });
 }));
 const removeCartItemsQuantity = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    req.body["userId"] = req === null || req === void 0 ? void 0 : req.user.id;
+    const { id } = req === null || req === void 0 ? void 0 : req.user;
+    req.body["userId"] = id;
     req.body["totalTicket"] = 1;
     let result;
     const isAlreadyExits = yield cart_service_1.cartService.findUnique(req.body);
@@ -62,7 +64,8 @@ const removeToCart = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
     });
 }));
 const getUserCart = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield cart_service_1.cartService.getUserCart(req.user.id);
+    const { id } = req.user;
+    const result = yield cart_service_1.cartService.getUserCart(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

@@ -12,12 +12,10 @@ router
     auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
     countryController.createCountry
   );
-router
-  .route("/get-all")
-  .get(
-    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER),
-    countryController.getAllData
-  );
+router.route("/get-all").get(
+  // auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER),
+  countryController.getAllData
+);
 router
   .route("/:id")
   .patch(

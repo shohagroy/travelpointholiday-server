@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.banarService = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
-const paginationHelper_1 = require("../../../helpers/paginationHelper");
+const imagesUpload_1 = __importDefault(require("../../../helpers/imagesUpload"));
+const deletedImages_1 = __importDefault(require("../../../helpers/deletedImages"));
 const createNewBanar = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.banar.create({
-        data: payload,
+    const uploadedImages = yield (0, imagesUpload_1.default)(payload);
+    const result = yield prisma_1.default.banar.createMany({
+        data: uploadedImages,
     });
     return result;
 });
@@ -30,28 +32,17 @@ const updateBanar = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     });
     return result;
 });
-const getAllBanar = (paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
-    const { size, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
-    const result = yield prisma_1.default.banar.findMany({
-        skip,
-        take: size,
-    });
-    const total = yield prisma_1.default.banar.count({});
-    return {
-        meta: {
-            total,
-            page,
-            size,
-        },
-        data: result,
-    };
+const getAllBanar = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.banar.findMany({});
+    return result;
 });
-const deleteById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteById = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.banar.delete({
         where: {
             id,
         },
     });
+    yield (0, deletedImages_1.default)([data]);
     return result;
 });
 exports.banarService = {

@@ -14,4 +14,8 @@ exports.default = {
     expires_in: process.env.EXPIRES_IN,
     refreshToken_expires: process.env.REFRESHTOKEN_EXPIRES,
     client_url: process.env.CLIENT_URL,
+    server_url: process.env.SERVER_URL,
+    google_client_id: process.env.GOOGLE_CLIENT_ID,
+    google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    google_call_back_url: process.env.GOOGLE_CALL_BACK_URL,
 };

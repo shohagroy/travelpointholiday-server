@@ -3,9 +3,11 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { cartService } from "./cart.service";
+import { JwtPayload } from "jsonwebtoken";
 
 const addToCart = catchAsync(async (req: Request, res: Response) => {
-  req.body["userId"] = req?.user!.id;
+  const { id }: JwtPayload = req?.user!;
+  req.body["userId"] = id;
 
   let result;
 
@@ -27,7 +29,9 @@ const addToCart = catchAsync(async (req: Request, res: Response) => {
 
 const removeCartItemsQuantity = catchAsync(
   async (req: Request, res: Response) => {
-    req.body["userId"] = req?.user!.id;
+    const { id }: JwtPayload = req?.user!;
+    req.body["userId"] = id;
+
     req.body["totalTicket"] = 1;
 
     let result;
@@ -61,7 +65,8 @@ const removeToCart = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserCart = catchAsync(async (req: Request, res: Response) => {
-  const result = await cartService.getUserCart(req.user!.id);
+  const { id }: JwtPayload = req.user!;
+  const result = await cartService.getUserCart(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

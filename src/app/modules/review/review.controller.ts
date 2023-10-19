@@ -5,9 +5,10 @@ import httpStatus from "http-status";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 import { reviewService } from "./reivew.service";
+import { JwtPayload } from "jsonwebtoken";
 
 const createNewReview = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.user!;
+  const { id }: JwtPayload = req.user!;
 
   req.body["userId"] = id;
 

@@ -195,8 +195,26 @@ const findByEmail = async (email: string) => {
 };
 
 const insertUserToDB = async (data: User): Promise<User> => {
-  const result = await prisma.user.create({
-    data,
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const userInfo = await transactionClient.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        role: data.role,
+      },
+    });
+
+    if (data?.avatarId) {
+      await transactionClient.avatar.create({
+        data: {
+          secure_url: data.avatarId,
+          public_id: "google_img",
+          userId: userInfo.id,
+        },
+      });
+    }
+    return userInfo;
   });
 
   return result;

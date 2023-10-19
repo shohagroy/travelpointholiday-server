@@ -40,8 +40,9 @@ const createBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const getUserBookingList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.user;
     const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationFields);
-    const result = yield booking_service_1.bookingService.getUserBookingList(paginationOptions, req.user.userId);
+    const result = yield booking_service_1.bookingService.getUserBookingList(paginationOptions, id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

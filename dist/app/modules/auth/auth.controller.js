@@ -29,6 +29,9 @@ const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 const auth_service_1 = require("./auth.service");
 const envconfig_1 = __importDefault(require("../../../config/envconfig"));
+const passport_1 = __importDefault(require("passport"));
+const jwtHelpers_1 = require("../../../utils/jwtHelpers");
+const google_config_1 = __importDefault(require("../../../config/google.config"));
 const userSignup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.authService.createNewUser(req.body);
     const { refreshToken, accessToken } = result;
@@ -60,6 +63,7 @@ const userSignin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         message: "User Login Successufully!",
         data: {
             accessToken,
+            refreshToken,
         },
     });
 }));
@@ -84,13 +88,13 @@ const changePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     });
 }));
 const getAccessToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    const result = yield auth_service_1.authService.createAccessToken(user.id);
+    // const user: Partial<User> = req.user as Partial<User>;
+    // const result = await authService.createAccessToken(user.id!);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
         message: "Access Token Get successufully",
-        data: result,
+        // data: result,
     });
 }));
 const changeUserRole = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,6 +117,23 @@ const deleteUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+const googleCallBack = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    passport_1.default.authenticate("google", (error, user) => __awaiter(void 0, void 0, void 0, function* () {
+        const accessToken = yield jwtHelpers_1.jwtHelpers.createToken(user, envconfig_1.default.expires_in);
+        const redirectUrl = `${envconfig_1.default.client_url}?token=${accessToken}`;
+        res.redirect(redirectUrl);
+    }))(req, res, next);
+}));
+const googleLoginUrl = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { clientID, callbackURL } = google_config_1.default;
+    const authenticationURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientID}&redirect_uri=${callbackURL}&response_type=code&scope=email%20profile`;
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "user Delete Successfully successufully",
+        data: authenticationURL,
+    });
+}));
 exports.authController = {
     userSignup,
     userSignin,
@@ -121,4 +142,6 @@ exports.authController = {
     changePassword,
     changeUserRole,
     deleteUser,
+    googleCallBack,
+    googleLoginUrl,
 };

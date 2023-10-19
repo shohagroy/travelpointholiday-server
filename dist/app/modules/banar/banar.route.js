@@ -11,7 +11,7 @@ const banar_controller_1 = require("./banar.controller");
 const router = express_1.default.Router();
 router.route("/").get(banar_controller_1.banarController.getAllBanar);
 router
-    .route("/create")
+    .route("/upload")
     .post((0, auth_1.default)(user_constants_1.ENUM_USER_ROLE.ADMIN, user_constants_1.ENUM_USER_ROLE.SUPER_ADMIN), banar_controller_1.banarController.createbanar);
 router
     .route("/:id")
